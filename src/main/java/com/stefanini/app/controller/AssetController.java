@@ -1,6 +1,7 @@
 package com.stefanini.app.controller;
 
 import com.stefanini.app.entity.Asset;
+import com.stefanini.app.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/equipamentos")
 public class AssetController{
 
+    @Autowired
+    private AssetService assetService;
+
     @PostMapping(path = "/add")
-    public Asset addAsset(@RequestParam String heritage){
-        Asset asset = new Asset(heritage);
-
-        return asset;
+    public String addAsset(@RequestParam String heritage){
+        return assetService.saveAsset(new Asset(heritage));
     }
-
 }

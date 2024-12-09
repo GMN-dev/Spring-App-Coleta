@@ -12,7 +12,7 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String heritage;
 
     @Enumerated(EnumType.STRING)
