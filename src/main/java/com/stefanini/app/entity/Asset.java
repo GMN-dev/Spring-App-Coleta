@@ -32,6 +32,7 @@ public class Asset {
     public Asset(String heritage) {
         this.heritage = heritage;
     }
+    public Asset(){}
 
     //getters and setters
 
