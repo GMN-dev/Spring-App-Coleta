@@ -2,10 +2,12 @@ package com.stefanini.app.service;
 
 import com.stefanini.app.entity.Asset;
 import com.stefanini.app.repository.AssetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +18,19 @@ public class AssetService {
 
     private final AssetRepository repository;
 
+    @Autowired
+    EmailService emailService;
+
     public AssetService(AssetRepository assetRepository) {
         repository = assetRepository;
     }
 
-    public ResponseEntity saveAsset(Asset asset) {
+    public ResponseEntity saveAsset(Asset asset, String to, String subject, String text) {
         try {
             if(asset.getHeritage() != null && !asset.getHeritage().isEmpty()) {
                 if (asset.getHeritage().length() == 7) {
                     if (asset.getHeritage().startsWith("N00") || asset.getHeritage().startsWith("C0")) {
+                        emailService.SendEmail(to, subject, text);
                         Asset response = repository.save(asset);
                         return ResponseEntity.status(HttpStatus.CREATED).body(response);
                     } else {

@@ -14,8 +14,8 @@ public class AssetController{
     private AssetService assetService;
 
     @PostMapping(path = "/add")
-    public ResponseEntity addAsset(@RequestParam String heritage){
-        return assetService.saveAsset(new Asset(heritage));
+    public ResponseEntity addAsset(@RequestParam String heritage, @RequestParam String to, @RequestParam String subject, @RequestParam String text ){
+        return assetService.saveAsset(new Asset(heritage), to, subject, text);
     }
 
     @GetMapping(path = "/listagem")
