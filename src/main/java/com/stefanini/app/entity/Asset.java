@@ -1,4 +1,5 @@
 package com.stefanini.app.entity;
+import com.stefanini.app.utils.AssetType;
 import jakarta.persistence.*;
 import com.stefanini.app.utils.Status;
 
@@ -14,6 +15,10 @@ public class Asset {
 
     @Column(unique = true)
     private String heritage;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private AssetType assetType;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -35,7 +40,6 @@ public class Asset {
     public Asset(){}
 
     //getters and setters
-
     public String getHeritage() {
         return heritage;
     }
@@ -67,6 +71,5 @@ public class Asset {
     public void setPickupDate(LocalDate pickupDate) {
         this.pickupDate = pickupDate;
     }
-
 
 }
