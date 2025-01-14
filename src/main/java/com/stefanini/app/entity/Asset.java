@@ -25,7 +25,7 @@ public class Asset {
     private Status status = Status.PENDENTE;
 
     @Column
-    private LocalDate scheduledDate = LocalDate.now();
+    private LocalDate scheduledDate;
 
     @Column
     private  LocalDate pickupDate;
