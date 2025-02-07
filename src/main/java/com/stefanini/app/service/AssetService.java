@@ -2,6 +2,7 @@ package com.stefanini.app.service;
 
 import com.stefanini.app.entity.Asset;
 import com.stefanini.app.repository.AssetRepository;
+import com.stefanini.app.utils.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,4 +53,9 @@ public class AssetService {
         ResponseEntity response = ResponseEntity.ok(listAssets);
         return response;
     }
+
+//    public void updatePendingDays(Asset asset){
+//
+//        asset.setPendingDays();
+//    }
 }

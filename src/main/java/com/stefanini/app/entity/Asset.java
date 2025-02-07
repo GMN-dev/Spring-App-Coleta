@@ -25,9 +25,6 @@ public class Asset {
     private Status status = Status.PENDENTE;
 
     @Column
-    private LocalDate scheduledDate;
-
-    @Column
     private  LocalDate pickupDate;
 
     @Column
@@ -56,20 +53,20 @@ public class Asset {
         this.status = status;
     }
 
-    public LocalDate getScheduledDate() {
-        return scheduledDate;
-    }
-
-    public void setScheduledDate(LocalDate scheduledDate) {
-        this.scheduledDate = scheduledDate;
-    }
-
     public LocalDate getPickupDate() {
         return pickupDate;
     }
 
     public void setPickupDate(LocalDate pickupDate) {
         this.pickupDate = pickupDate;
+    }
+
+    public Integer getPendingDays(){
+        return this.pendingDays;
+    }
+
+    public void setPendingDays(Integer pendingDays){
+        this.pendingDays = pendingDays;
     }
 
 }
