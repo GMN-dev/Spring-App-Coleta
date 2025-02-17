@@ -2,17 +2,16 @@ package com.stefanini.app.service;
 
 import com.stefanini.app.entity.Asset;
 import com.stefanini.app.repository.AssetRepository;
+import com.stefanini.app.utils.Formatter;
 import com.stefanini.app.utils.Status;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AssetService {
@@ -26,12 +25,12 @@ public class AssetService {
         repository = assetRepository;
     }
 
-    public ResponseEntity saveAsset(Asset asset, String to, String subject, String text) {
+    public ResponseEntity saveAsset(Asset asset) {
         try {
             if(asset.getHeritage() != null && !asset.getHeritage().isEmpty()) {
                 if (asset.getHeritage().length() == 7) {
                     if (asset.getHeritage().startsWith("N00") || asset.getHeritage().startsWith("C0")) {
-                        emailService.SendEmail(to, subject, text);
+                        emailService.SendEmail(asset);
                         Asset response = repository.save(asset);
                         return ResponseEntity.status(HttpStatus.CREATED).body(response);
                     } else {
@@ -54,8 +53,25 @@ public class AssetService {
         return response;
     }
 
-//    public void updatePendingDays(Asset asset){
-//
-//        asset.setPendingDays();
-//    }
+    public ResponseEntity deleteAsset(UUID uuid){
+        try {
+            repository.deleteById(uuid);
+            return ResponseEntity.noContent().build();
+        }catch (Error error){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity updateAsset( Status status, String scheduledDate, UUID uuid){
+        Asset asset = repository.findById(uuid).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        try{
+            asset.setSchedulatedDate(Formatter.setStringToLocalDate(scheduledDate));
+        }catch (Error err){
+            return ResponseEntity.badRequest().body("Erro de conversão de data!");
+        }
+        asset.setStatus(status);
+        repository.save(asset);
+        return ResponseEntity.ok().body(asset);
+    }
+
 }
