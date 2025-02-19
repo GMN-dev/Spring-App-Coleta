@@ -1,5 +1,7 @@
 package com.stefanini.app.controller;
 
+import com.stefanini.app.dto.AssetCreateDTO;
+import com.stefanini.app.dto.AssetUpdateDTO;
 import com.stefanini.app.entity.Asset;
 import com.stefanini.app.service.AssetService;
 import com.stefanini.app.service.EmailService;
@@ -21,8 +23,8 @@ public class AssetController{
     private EmailService emailService;
 
     @PostMapping(path = "/add")
-    public ResponseEntity addAsset(@RequestParam String heritage, @RequestParam String to, @RequestParam String employee, @RequestParam AssetType type){
-        return assetService.saveAsset(new Asset(heritage, type, employee, to));
+    public ResponseEntity addAsset(@RequestBody AssetCreateDTO assetDTO){
+        return assetService.saveAsset(assetDTO);
     }
 
     @GetMapping(path = "/list")
@@ -30,14 +32,11 @@ public class AssetController{
         return assetService.getAssets();
     }
 
-    @PatchMapping(path = "/update")
-    public ResponseEntity updateAsset(@RequestParam Status status, @RequestParam String scheduledDate, @RequestParam UUID uuid){
-        return assetService.updateAsset(status, scheduledDate, uuid);
-    }
+    @PatchMapping(path = "/update/{id}")
+    public ResponseEntity updateAsset(@PathVariable UUID id, @RequestBody AssetUpdateDTO assetDTO){
+        return assetService.updateAsset(assetDTO ,id);}
 
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity deleteAsset(@PathVariable UUID id){
-        return assetService.deleteAsset(id);
-    }
-
+        return assetService.deleteAsset(id);}
 }

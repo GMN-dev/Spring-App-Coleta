@@ -1,5 +1,7 @@
 package com.stefanini.app.service;
 
+import com.stefanini.app.dto.AssetCreateDTO;
+import com.stefanini.app.dto.AssetUpdateDTO;
 import com.stefanini.app.entity.Asset;
 import com.stefanini.app.repository.AssetRepository;
 import com.stefanini.app.utils.Formatter;
@@ -25,7 +27,8 @@ public class AssetService {
         repository = assetRepository;
     }
 
-    public ResponseEntity saveAsset(Asset asset) {
+    public ResponseEntity saveAsset(AssetCreateDTO assetDTO) {
+        Asset asset = new Asset(assetDTO.heritage(), assetDTO.type(), assetDTO.employee(), assetDTO.to());
         try {
             if(asset.getHeritage() != null && !asset.getHeritage().isEmpty()) {
                 if (asset.getHeritage().length() == 7) {
@@ -62,16 +65,17 @@ public class AssetService {
         }
     }
 
-    public ResponseEntity updateAsset( Status status, String scheduledDate, UUID uuid){
-        Asset asset = repository.findById(uuid).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+    public ResponseEntity updateAsset(AssetUpdateDTO assetDTO, UUID id){
+        Asset asset = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
         try{
-            asset.setSchedulatedDate(Formatter.setStringToLocalDate(scheduledDate));
+            asset.setSchedulatedDate(Formatter.setStringToLocalDate(assetDTO.scheduledDate()));
+            asset.setStatus(assetDTO.status());
+            repository.save(asset);
+            return ResponseEntity.ok().body(asset);
         }catch (Error err){
             return ResponseEntity.badRequest().body("Erro de conversão de data!");
         }
-        asset.setStatus(status);
-        repository.save(asset);
-        return ResponseEntity.ok().body(asset);
+
     }
 
 }
