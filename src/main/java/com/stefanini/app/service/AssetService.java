@@ -5,7 +5,6 @@ import com.stefanini.app.dto.AssetUpdateDTO;
 import com.stefanini.app.entity.Asset;
 import com.stefanini.app.repository.AssetRepository;
 import com.stefanini.app.utils.Formatter;
-import com.stefanini.app.utils.Status;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,14 +27,14 @@ public class AssetService {
     }
 
     public ResponseEntity saveAsset(AssetCreateDTO assetDTO) {
-        Asset asset = new Asset(assetDTO.heritage(), assetDTO.type(), assetDTO.employee(), assetDTO.to());
+        Asset asset = new Asset(assetDTO.heritage(), assetDTO.type(), assetDTO.name(), assetDTO.email());
         try {
             if(asset.getHeritage() != null && !asset.getHeritage().isEmpty()) {
                 if (asset.getHeritage().length() == 7) {
                     if (asset.getHeritage().startsWith("N00") || asset.getHeritage().startsWith("C0")) {
                         emailService.SendEmail(asset);
-                        Asset response = repository.save(asset);
-                        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                        repository.save(asset);
+                        return ResponseEntity.noContent().build();
                     } else {
                         return ResponseEntity.badRequest().body("O prefixo padrão de patrimônio não está correto (C0XXXXX ou N00XXXX)");
                     }
@@ -56,14 +55,19 @@ public class AssetService {
         return response;
     }
 
-    public ResponseEntity deleteAsset(UUID uuid){
-        try {
-            repository.deleteById(uuid);
-            return ResponseEntity.noContent().build();
-        }catch (Error error){
+
+    public ResponseEntity<Void> deleteAsset(UUID uuid) {
+        if (!repository.existsById(uuid)) {
             return ResponseEntity.notFound().build();
         }
+        try {
+            repository.deleteById(uuid);
+            return ResponseEntity.noContent().build(); // Retorna 204 No Content se a exclusão for bem-sucedida
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Retorna 500 em caso de erro no banco
+        }
     }
+
 
     public ResponseEntity updateAsset(AssetUpdateDTO assetDTO, UUID id){
         Asset asset = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
@@ -71,11 +75,10 @@ public class AssetService {
             asset.setSchedulatedDate(Formatter.setStringToLocalDate(assetDTO.scheduledDate()));
             asset.setStatus(assetDTO.status());
             repository.save(asset);
-            return ResponseEntity.ok().body(asset);
+            return ResponseEntity.noContent().build();
         }catch (Error err){
             return ResponseEntity.badRequest().body("Erro de conversão de data!");
         }
-
     }
 
 }

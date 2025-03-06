@@ -20,7 +20,7 @@ public class Asset {
     private String heritage;
 
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private AssetType assetType;
 
     @Enumerated(EnumType.STRING)

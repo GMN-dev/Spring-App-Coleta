@@ -7,6 +7,7 @@ import com.stefanini.app.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.UUID;
 
 @CrossOrigin(origins = "*")
@@ -36,4 +37,5 @@ public class AssetController{
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity deleteAsset(@PathVariable UUID id){
         return assetService.deleteAsset(id);}
+
 }
