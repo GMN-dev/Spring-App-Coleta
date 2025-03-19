@@ -27,7 +27,7 @@ public class AssetService {
     }
 
     public ResponseEntity saveAsset(AssetCreateDTO assetDTO) {
-        Asset asset = new Asset(assetDTO.heritage(), assetDTO.type(), assetDTO.name(), assetDTO.email());
+        Asset asset = new Asset(assetDTO.heritage(), assetDTO.assetType(), assetDTO.name(), assetDTO.email());
         try {
             if(asset.getHeritage() != null && !asset.getHeritage().isEmpty()) {
                 if (asset.getHeritage().length() == 7) {
@@ -72,7 +72,7 @@ public class AssetService {
     public ResponseEntity updateAsset(AssetUpdateDTO assetDTO, UUID id){
         Asset asset = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
         try{
-            asset.setSchedulatedDate(Formatter.setStringToLocalDate(assetDTO.scheduledDate()));
+            asset.setScheduledDate(Formatter.setStringToLocalDate(assetDTO.scheduledDate()));
             asset.setStatus(assetDTO.status());
             repository.save(asset);
             return ResponseEntity.noContent().build();

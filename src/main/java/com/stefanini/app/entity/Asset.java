@@ -3,7 +3,6 @@ import com.stefanini.app.utils.AssetType;
 import jakarta.persistence.*;
 import com.stefanini.app.utils.Status;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -31,7 +30,7 @@ public class Asset {
     private  LocalDate pickupDate;
 
     @Column
-    private LocalDate schedulatedDate = LocalDate.now();
+    private LocalDate scheduledDate = null;
 
     @Column
     private Integer pendingDays = 0;
@@ -69,8 +68,8 @@ public class Asset {
         this.pickupDate = pickupDate;
     }
 
-    public LocalDate getSchedulatedDate() {return schedulatedDate;}
-    public void setSchedulatedDate(LocalDate schedulatedDate) {this.schedulatedDate = schedulatedDate;}
+    public LocalDate getScheduledDate() {return scheduledDate;}
+    public void setScheduledDate(LocalDate scheduledDate) {this.scheduledDate = scheduledDate;}
 
     public Integer getPendingDays(){
         return this.pendingDays;

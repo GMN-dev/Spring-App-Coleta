@@ -6,5 +6,5 @@ public record AssetCreateDTO(
         String heritage,
         String email,
         String name,
-        AssetType type
+        AssetType assetType
 ){}
