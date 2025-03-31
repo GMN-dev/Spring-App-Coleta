@@ -72,7 +72,11 @@ public class AssetService {
     public ResponseEntity updateAsset(AssetUpdateDTO assetDTO, UUID id){
         Asset asset = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
         try{
-            asset.setScheduledDate(Formatter.setStringToLocalDate(assetDTO.scheduledDate()));
+            if(assetDTO.scheduledDate() != null){
+                asset.setScheduledDate(Formatter.setStringToLocalDate(assetDTO.scheduledDate()));
+            }else{
+                asset.setScheduledDate(null);
+            }
             asset.setStatus(assetDTO.status());
             repository.save(asset);
             return ResponseEntity.noContent().build();
