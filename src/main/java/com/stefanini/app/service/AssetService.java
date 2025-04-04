@@ -55,7 +55,6 @@ public class AssetService {
         return response;
     }
 
-
     public ResponseEntity<Void> deleteAsset(UUID uuid) {
         if (!repository.existsById(uuid)) {
             return ResponseEntity.notFound().build();
@@ -67,7 +66,6 @@ public class AssetService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Retorna 500 em caso de erro no banco
         }
     }
-
 
     public ResponseEntity updateAsset(AssetUpdateDTO assetDTO, UUID id){
         Asset asset = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
